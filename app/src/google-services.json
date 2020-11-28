@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1058394028180",
+    "firebase_url": "https://carbrokeapp.firebaseio.com",
+    "project_id": "carbrokeapp",
+    "storage_bucket": "carbrokeapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058394028180:android:0b4989a24db79f3f22dc81",
+        "android_client_info": {
+          "package_name": "com.kad.carbrokefinal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058394028180-bodjsr25luqum8r3fgmka4i9cbp3ip51.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kad.carbrokefinal",
+            "certificate_hash": "94762bcc33ebe35fb2352bcab36ff2cc27b027c2"
+          }
+        },
+        {
+          "client_id": "1058394028180-n66rhit3uk01l9jln0c0lh3lond8rpqc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiXubRudO-vn7spuOmHr9UUn-5SHBduPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058394028180-n66rhit3uk01l9jln0c0lh3lond8rpqc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
