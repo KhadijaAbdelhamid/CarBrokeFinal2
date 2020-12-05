@@ -1,0 +1,47 @@
+{
+  "provider_location" : {
+    "-MNlcuH1mCxlxYJL8hh5" : {
+      "lat" : 32.879035,
+      "lon" : 13.245708
+    }
+  },
+  "provider_service" : {
+    "-MNlcuH1mCxlxYJL8hh5" : {
+      "-MNlKP2MjJK_UE1CxXAd" : true,
+      "-MNlKSWCqrYoVI_NFj0W" : true,
+      "-MNlKV3ERI81IwN1qSEW" : true
+    }
+  },
+  "providers" : {
+    "-MNlcuH1mCxlxYJL8hh5" : {
+      "email" : "mosa.brgan@gmail.com",
+      "location" : "Tripoli",
+      "name" : "Mosa Burgan",
+      "password" : "123456",
+      "phone" : "+218928076268",
+      "user_name" : "admin"
+    }
+  },
+  "service_provider" : {
+    "-MNlKP2MjJK_UE1CxXAd" : {
+      "-MNlcuH1mCxlxYJL8hh5" : true
+    },
+    "-MNlKSWCqrYoVI_NFj0W" : {
+      "-MNlcuH1mCxlxYJL8hh5" : true
+    },
+    "-MNlKV3ERI81IwN1qSEW" : {
+      "-MNlcuH1mCxlxYJL8hh5" : true
+    }
+  },
+  "services" : {
+    "-MNlKP2MjJK_UE1CxXAd" : {
+      "name" : "تصليح بطارية"
+    },
+    "-MNlKSWCqrYoVI_NFj0W" : {
+      "name" : "ساحبة"
+    },
+    "-MNlKV3ERI81IwN1qSEW" : {
+      "name" : "تغيير زيوت"
+    }
+  }
+}
