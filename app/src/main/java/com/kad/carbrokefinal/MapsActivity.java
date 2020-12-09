@@ -12,13 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -40,6 +44,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +53,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, ServicesAdapter.SelectedItem {
@@ -54,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseReference mDatabase;
 
 
-    private GoogleMap mMap;
+    // private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
@@ -63,18 +70,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FusedLocationProviderClient mFusedLocationClient;
     ServicesAdapter servicesAdapter;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 101;
+
     RecyclerView servicesRV;
     List<Service> servicesList;
+    List<Provider> providerList;
+    private BottomSheetBehavior mBottomSheetBehavior1;
+    View bottomSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         servicesList = new ArrayList<>();
+        providerList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         servicesRV = findViewById(R.id.services);
-        servicesRV.setLayoutManager(layoutManager);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        servicesRV.setLayoutManager(layoutManager);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         servicesAdapter = new ServicesAdapter(servicesList, this, this);
         servicesRV.setAdapter(servicesAdapter);
@@ -82,7 +95,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        bottomSheet = findViewById(R.id.provider_bottom_sheet);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior1.setPeekHeight(0);
+        mBottomSheetBehavior1.setHalfExpandedRatio(0.5f);
+        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//        mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                   // tapactionlayout.setVisibility(View.GONE);
+//                }
+//
+//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+//                    //tapactionlayout.setVisibility(View.GONE);
+//                }
+//
+//                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+//                   // tapactionlayout.setVisibility(View.GONE);
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
+        loadServiceProviders();
     }
+
+    private void loadServiceProviders() {
+        mDatabase.child("providers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot providers) {
+
+                for (final DataSnapshot dataSnapshot : providers.getChildren()) {
+                    Provider provider = new Provider();
+                    provider.setId(dataSnapshot.getKey());
+                    provider.setName(dataSnapshot.child("name").getValue().toString());
+                    provider.setPhone(dataSnapshot.child("phone").getValue().toString());
+                    provider.setLat((Double) dataSnapshot.child("lat").getValue());
+                    provider.setLon((Double) dataSnapshot.child("lon").getValue());
+                    providerList.add(provider);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("EEEEE", error.getDetails().toString());
+            }
+        });
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -143,7 +207,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     };
 
     private void loadServices() {
-        FirebaseDatabase.getInstance().getReference().child("services").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("services").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -248,8 +312,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLastLocation = location;
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
     }
 
@@ -282,49 +346,103 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void selectedItem(Service service) {
 
         loadServiceProvidersLocations(service.getId());
-        Toast.makeText(this, service.getId(), Toast.LENGTH_LONG).show();
+        //   Toast.makeText(this, service.getId(), Toast.LENGTH_LONG).show();
     }
 
     private void loadServiceProvidersLocations(String id) {
-   //     mGoogleMap.clear();
+        //     mGoogleMap.clear();
 
-     //   mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-        FirebaseDatabase.getInstance().getReference().child("service_provider").child(id).addValueEventListener(new ValueEventListener() {
+        //   mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        mDatabase.child("service_provider").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot providersIds) {
 
                 for (final DataSnapshot dataSnapshot : providersIds.getChildren()) {
-                    FirebaseDatabase.getInstance().getReference().child("provider_location").child(dataSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
-                          @Override
-                          public void onDataChange(@NonNull DataSnapshot snapshot) {
-                              Provider provider = new Provider();
-                              provider.setId(dataSnapshot.getKey());
-                              provider.setLat((Double) snapshot.child("lat").getValue());
-                              provider.setLon((Double) snapshot.child("lon").getValue());
-                              LatLng latLng = new LatLng(provider.getLat(), provider.getLon());
-                              MarkerOptions markerOptions = new MarkerOptions();
-                              markerOptions.position(latLng);
-                              markerOptions.title(provider.getId());
-                              markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                              mCurrLocationMarker = mGoogleMap.addMarker(markerOptions);
-                              Log.d("ProLAt",provider.getLat().toString());
-                          }
+                    mDatabase.child("provider_location").child(dataSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            final Provider provider = new Provider();
+                            provider.setId(dataSnapshot.getKey());
+                            provider.setLat((Double) snapshot.child("lat").getValue());
+                            provider.setLon((Double) snapshot.child("lon").getValue());
+                            LatLng latLng = new LatLng(provider.getLat(), provider.getLon());
+                            providerList.add(provider);
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(latLng);
+                            //markerOptions.title("")
+                            markerOptions.title(provider.getId());
+                            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                            mCurrLocationMarker = mGoogleMap.addMarker(markerOptions);
+                            mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                @Override
+                                public boolean onMarkerClick(Marker marker) {
+                                    //    Toast.makeText(MapsActivity.this, marker.getTitle(), Toast.LENGTH_LONG).show();
+                                    final Provider provider1 = findUsingIterator(marker.getTitle());
+                                    TextView pName = findViewById(R.id.provider_name);
+                                    TextView pPhone = findViewById(R.id.provider_phone);
+                                    TextView pDistance = findViewById(R.id.provider_distance);
+                                    FloatingActionButton fab = findViewById(R.id.fab);
+                                    fab.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            callProvider(provider1.getPhone());
+                                        }
+                                    });
+                                    pName.setText(provider1.getName());
+                                    pPhone.setText(provider1.getPhone());
+                                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                          @Override
-                          public void onCancelled(@NonNull DatabaseError error) {
-                              Log.d("EEEEE",error.getDetails().toString());
-                          }
-                      });
+                                    return true;
+                                }
+                            });
+                            Log.d("ProLAt", provider.getLat().toString());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("EEEEE", error.getDetails().toString());
+                        }
+                    });
                 }
-                servicesAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("EEEEE",error.getDetails().toString());
+                Log.d("EEEEE", error.getDetails().toString());
             }
         });
 
+    }
+
+    private void callProvider(String phone) {
+        if (ActivityCompat.checkSelfPermission(MapsActivity.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this,
+                    android.Manifest.permission.CALL_PHONE)) {
+            } else {
+                ActivityCompat.requestPermissions(MapsActivity.this,
+                        new String[]{android.Manifest.permission.CALL_PHONE},
+                        MY_PERMISSIONS_REQUEST_CALL_PHONE);
+            }
+        }
+        if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.CALL_PHONE) ==
+                PackageManager.PERMISSION_GRANTED) {
+
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phone));
+            startActivity(callIntent);
+        }
+
+    }
+
+    public Provider findUsingIterator(String id) {
+        Iterator<Provider> iterator = providerList.iterator();
+        while (iterator.hasNext()) {
+            Provider provider = iterator.next();
+            if (provider.getId().equals(id)) {
+                return provider;
+            }
+        }
+        return null;
     }
 
 }

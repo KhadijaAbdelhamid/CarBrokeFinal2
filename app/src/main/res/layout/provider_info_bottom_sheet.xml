@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/provider_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:clipToPadding="true"
+    android:background="@android:color/white"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    android:elevation="10dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="4dp"
+            android:layout_margin="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/provider_name"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GET DIRECTIONS"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/provider_phone"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GET DIRECTIONS"
+                    android:textStyle="bold|italic"/>
+                <TextView
+                    android:id="@+id/provider_distance"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GET DIRECTIONS"
+                    android:textStyle="bold|italic" />
+
+
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                app:srcCompat="@android:drawable/ic_menu_info_details"
+                >
+
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
+    <!--<LinearLayout-->
+    <!--android:padding="15dp"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<LinearLayout-->
+    <!--    android:layout_weight="1"-->
+    <!--    android:orientation="vertical"-->
+    <!--    android:layout_width="wrap_content"-->
+    <!--    android:layout_height="wrap_content">-->
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:padding="10dp"-->
+    <!--        android:background="@drawable/circleshape"-->
+    <!--        android:layout_width="60dp"-->
+    <!--        android:layout_height="60dp">-->
+
+    <!--        <ImageView-->
+    <!--            android:src="@drawable/ic_directions_car_white_24dp"-->
+    <!--            android:layout_width="35dp"-->
+    <!--            android:layout_height="35dp" />-->
+
+    <!--    </RelativeLayout>-->
+
+    <!--    <TextView-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:textColor="@color/grey"-->
+    <!--        android:text="Drive"/>-->
+
+    <!--</LinearLayout>-->
+
+
+    <!--<LinearLayout-->
+    <!--    android:layout_weight="1"-->
+    <!--    android:orientation="vertical"-->
+    <!--    android:layout_width="wrap_content"-->
+    <!--    android:layout_height="wrap_content">-->
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:padding="10dp"-->
+    <!--        android:background="@drawable/circleshape"-->
+    <!--        android:layout_width="60dp"-->
+    <!--        android:layout_height="60dp">-->
+
+    <!--        <ImageView-->
+    <!--            android:src="@drawable/ic_train_white_24dp"-->
+    <!--            android:layout_width="35dp"-->
+    <!--            android:layout_height="35dp" />-->
+
+    <!--    </RelativeLayout>-->
+
+
+    <!--    <TextView-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:textColor="@color/grey"-->
+    <!--        android:text="Train or Bus"/>-->
+
+    <!--</LinearLayout>-->
+
+
+    <!--<LinearLayout-->
+    <!--    android:layout_weight="1"-->
+    <!--    android:orientation="vertical"-->
+    <!--    android:layout_width="wrap_content"-->
+    <!--    android:layout_height="wrap_content">-->
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:padding="10dp"-->
+    <!--        android:background="@drawable/circleshape"-->
+    <!--        android:layout_width="60dp"-->
+    <!--        android:layout_height="60dp">-->
+
+    <!--        <ImageView-->
+    <!--            android:src="@drawable/ic_directions_walk_white_24dp"-->
+    <!--            android:layout_width="35dp"-->
+    <!--            android:layout_height="35dp" />-->
+
+    <!--    </RelativeLayout>-->
+
+
+    <!--    <TextView-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:textColor="@color/grey"-->
+    <!--        android:text="Walk"/>-->
+
+
+
+    <!--</LinearLayout>-->
+
+
+
+    <!--<LinearLayout-->
+    <!--    android:layout_weight="1"-->
+    <!--    android:orientation="vertical"-->
+    <!--    android:layout_width="wrap_content"-->
+    <!--    android:layout_height="wrap_content">-->
+
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:padding="10dp"-->
+    <!--        android:background="@drawable/circleshape"-->
+    <!--        android:layout_width="60dp"-->
+    <!--        android:layout_height="60dp">-->
+
+    <!--        <ImageView-->
+    <!--            android:src="@drawable/ic_nature_people_white_24dp"-->
+    <!--            android:layout_width="35dp"-->
+    <!--            android:layout_height="35dp"/>-->
+
+    <!--    </RelativeLayout>-->
+
+    <!--    <TextView-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:gravity="center"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:textColor="@color/grey"-->
+    <!--        android:text="Cab"/>-->
+
+    <!--</LinearLayout>-->
+
+
+
+    <!--</LinearLayout>-->
