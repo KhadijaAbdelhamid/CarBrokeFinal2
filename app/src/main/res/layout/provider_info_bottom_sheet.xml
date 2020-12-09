@@ -27,13 +27,14 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
+                android:padding="10dp"
                 android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/provider_name"
                     android:textColor="@android:color/black"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GET DIRECTIONS"
@@ -43,7 +44,7 @@
                     android:id="@+id/provider_phone"
                     android:textColor="@android:color/black"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GET DIRECTIONS"
@@ -52,7 +53,7 @@
                     android:id="@+id/provider_distance"
                     android:textColor="@android:color/black"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GET DIRECTIONS"
@@ -67,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="@dimen/fab_margin"
-                app:srcCompat="@android:drawable/ic_menu_info_details"
+                app:srcCompat="@drawable/ic_baseline_call_24"
                 >
 
             </com.google.android.material.floatingactionbutton.FloatingActionButton>
