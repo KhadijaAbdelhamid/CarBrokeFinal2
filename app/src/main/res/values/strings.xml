@@ -17,4 +17,9 @@
 
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_service_pro_maps">Map</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="update">Update</string>
+    <string name="cancel">Cancel</string>
+    <string name="on_duty">You\'re on duty</string>
+    <string name="you_not_on_duty">You\'re not on duty</string>
 </resources>

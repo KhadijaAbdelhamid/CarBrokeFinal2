@@ -26,39 +26,21 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private EditText mName, mPhone, mEmail, mPassword, mPasswordCnf;
     private Button mLogin;
-
-    FirebaseDatabase firebaseDatabase;
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        FirebaseApp.initializeApp(this);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mAuth = FirebaseAuth.getInstance();
-
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    Intent registerIntent = new Intent(RegisterActivity.this, MapsActivity.class);
-                    startActivity(registerIntent);
-                    finish();
-                    // return;
-                }
-
-            }
-        };
-
         mName = findViewById(R.id.etxtName);
         mPhone = findViewById(R.id.etxtPhone);
         mEmail = findViewById(R.id.etxtNewUser);
@@ -86,16 +68,19 @@ public class RegisterActivity extends AppCompatActivity {
                                 } else {
                                     String user_id = mAuth.getCurrentUser().getUid();
 
-                                    DatabaseReference current_user_db = firebaseDatabase.getReference().child("Users").child(user_id);
-
-                                    //A hashmap that will insure that all the personal info will be saved to the firestore database at the same time
+                                    DatabaseReference current_user_db = mDatabase.child("Users").child(user_id);
+                                    DatabaseReference authDb = mDatabase.child("Auth");
 
                                     HashMap<String, Object> newPost = new HashMap<>();
-
                                     newPost.put("Name", name);
                                     newPost.put("Phone", phoneNum);
-
                                     current_user_db.setValue(newPost);
+
+
+                                    HashMap<String, Object> authData = new HashMap<>();
+                                    authData.put(user_id, false);
+                                    authDb.setValue(authData);
+
                                     Toast.makeText(RegisterActivity.this, "تم تسجيـلك بنجاح.", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -115,16 +100,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(firebaseAuthListener);
-    }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Intent registerIntent = new Intent(RegisterActivity.this, MapsActivity.class);
+            startActivity(registerIntent);
+            finish();
+            // return;
+        }
     }
-
 }

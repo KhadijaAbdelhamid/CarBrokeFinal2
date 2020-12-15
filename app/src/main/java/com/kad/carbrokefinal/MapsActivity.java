@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -82,11 +83,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         servicesList = new ArrayList<>();
         providerList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         servicesRV = findViewById(R.id.services);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         servicesRV.setLayoutManager(layoutManager);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         servicesAdapter = new ServicesAdapter(servicesList, this, this);

@@ -22,14 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
-public class ServiceProviderActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+public class ServiceProviderLoginActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
     private FirebaseAuth mAuth;
-  //  private FirebaseAuth.AuthStateListener firebaseAuthListener;
-  private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase;
     private EditText mUsername,  mPassword;
     private Button mButtonLogin;
-    boolean isProvider = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,18 +47,15 @@ public class ServiceProviderActivity extends AppCompatActivity implements Fireba
                 String email = mUsername.getText().toString().trim();
                 String password = mPassword.getText().toString();
 
-                mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(ServiceProviderActivity.this, new OnCompleteListener<AuthResult>() {
+                mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(ServiceProviderLoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(!task.isSuccessful())
-                        {
-                            Log.d("AAAA",task.toString());
-                            Toast.makeText(ServiceProviderActivity.this,R.string.error_signIn,Toast.LENGTH_LONG).show();}
-                        else {
-                            Intent loginIntent = new Intent(ServiceProviderActivity.this,ServiceProMapsActivity.class);
-                            startActivity(loginIntent);
-                            finish();
-                            // return;
+                        if (!task.isSuccessful()) {
+                            Log.d("AAAA", task.getException().toString());
+                            Log.d("RRRR", task.getResult().toString());
+                            Toast.makeText(ServiceProviderLoginActivity.this, R.string.error_signIn, Toast.LENGTH_LONG).show();
+                        } else {
+                            checkLogin();
                         }
                     }
                 });
@@ -70,31 +65,45 @@ public class ServiceProviderActivity extends AppCompatActivity implements Fireba
     }
 
 
-    boolean checkIfProvider(String id){
+    void checkIfUser(String id) {
 
         mDatabase.child("Auth").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot provider) {
-                isProvider = (boolean) provider.child("isProvider").getValue();
+                if (!(boolean) provider.child("isProvider").getValue()) {
+                    logOutUser();
+                    Toast.makeText(ServiceProviderLoginActivity.this,"You're user use user login",Toast.LENGTH_SHORT).show();
+                    Log.d("EEEEE", "IT's User");
+                } else {
+                    startActivity(new Intent(ServiceProviderLoginActivity.this, ServiceProMapsActivity.class));
+                }
+                finish();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("EEEEE", error.getDetails());
             }
         });
-        return isProvider;
+    }
+
+    void checkLogin() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            checkIfUser(user.getUid());
+        } else {
+            Toast.makeText(this,"Something went worng",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void logOutUser() {
+        mAuth.signOut();
+        startActivity(new Intent(ServiceProviderLoginActivity.this, LoginActivity.class));
+        finish();
     }
 
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null) {
-            if(checkIfProvider(user.getUid())) {
-                startActivity(new Intent(ServiceProviderActivity.this, ServiceProMapsActivity.class));
-            }else{
-                startActivity(new Intent(ServiceProviderActivity.this, MapsActivity.class));
-            }
-            finish();
-        }
+        checkLogin();
     }
 }
