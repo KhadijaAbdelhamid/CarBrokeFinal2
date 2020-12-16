@@ -76,6 +76,7 @@ public class ServiceProMapsActivity extends FragmentActivity implements OnMapRea
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_pro_maps);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
@@ -103,7 +104,7 @@ public class ServiceProMapsActivity extends FragmentActivity implements OnMapRea
 
 
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    //    mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         switchDuty = findViewById(R.id.switchStatus);
         textDuty = findViewById(R.id.textStatus);
 
