@@ -361,15 +361,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 for (final DataSnapshot dataSnapshot : providersIds.getChildren()) {
 
-                    mDatabase.child("provider_location").child(dataSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                    mDatabase.child("provider_location").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.hasChild(dataSnapshot.getKey())){
                             final Provider provider = new Provider();
-
+                            Log.d("pro",snapshot.getChildren().toString());
                             provider.setId(dataSnapshot.getKey());
-                            provider.setLat((Double) snapshot.child("lat").getValue());
-                            provider.setLon((Double) snapshot.child("lon").getValue());
+                            provider.setLat((Double) snapshot.child(dataSnapshot.getKey()).child("lat").getValue());
+                            provider.setLon((Double) snapshot.child(dataSnapshot.getKey()).child("lon").getValue());
                             LatLng latLng = new LatLng(provider.getLat(), provider.getLon());
                             providerList.add(provider);
                             MarkerOptions markerOptions = new MarkerOptions();

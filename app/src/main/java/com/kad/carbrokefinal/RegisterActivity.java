@@ -78,8 +78,8 @@ public class RegisterActivity extends AppCompatActivity implements FirebaseAuth.
 
 
                                     HashMap<String, Object> authData = new HashMap<>();
-                                    authData.put(user_id, false);
-                                    authDb.setValue(authData);
+                                    authData.put("isProvider", false);
+                                    authDb.child(user_id).setValue(authData);
 
                                     Toast.makeText(RegisterActivity.this, "تم تسجيـلك بنجاح.", Toast.LENGTH_SHORT).show();
                                 }
