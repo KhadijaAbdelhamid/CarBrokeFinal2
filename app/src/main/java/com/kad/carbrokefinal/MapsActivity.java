@@ -360,10 +360,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(@NonNull DataSnapshot providersIds) {
 
                 for (final DataSnapshot dataSnapshot : providersIds.getChildren()) {
+
                     mDatabase.child("provider_location").child(dataSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.hasChild(dataSnapshot.getKey())){
                             final Provider provider = new Provider();
+
                             provider.setId(dataSnapshot.getKey());
                             provider.setLat((Double) snapshot.child("lat").getValue());
                             provider.setLon((Double) snapshot.child("lon").getValue());
@@ -398,14 +401,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 }
                             });
                             Log.d("ProLAt", provider.getLat().toString());
-                        }
+                        }}
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             Log.d("EEEEE", error.getDetails().toString());
                         }
+
                     });
-                }
+                    }
+
             }
 
             @Override
