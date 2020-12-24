@@ -62,6 +62,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseReference mDatabase;
 
 
+    String imageURL = "https://firebasestorage.googleapis.com/v0/b/broken-car.appspot.com/o/services%2F";
+    String imageToken = "?alt=media&token=18730811-e0a7-4bb4-9b74-9edcbd913faa";
     // private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -216,7 +218,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for (final DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Service service = new Service();
                     service.setId(dataSnapshot.getKey());
-                    service.setImageUrl("https://picsum.photos/200");
+                    service.setImageUrl(imageURL + dataSnapshot.getKey()+".png"+imageToken);
 
                     servicesList.add(service);
                     Log.d("IMAGE", service.getImageUrl());
