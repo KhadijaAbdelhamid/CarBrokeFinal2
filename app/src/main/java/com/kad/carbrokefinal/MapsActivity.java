@@ -52,6 +52,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,7 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private DatabaseReference mDatabase;
 
-
+    FirebaseStorage storage;
+    StorageReference storageRef ;
     String imageURL = "https://firebasestorage.googleapis.com/v0/b/broken-car.appspot.com/o/services%2F";
     String imageToken = "?alt=media&token=18730811-e0a7-4bb4-9b74-9edcbd913faa";
     // private GoogleMap mMap;
@@ -85,8 +88,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference("gs://broken-car.appspot.com/services/");
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
         servicesList = new ArrayList<>();
         providerList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -214,11 +218,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mDatabase.child("services").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                servicesList.clear();
                 for (final DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Service service = new Service();
                     service.setId(dataSnapshot.getKey());
-                    service.setImageUrl(imageURL + dataSnapshot.getKey()+".png"+imageToken);
+                    service.setImageUrl(storageRef.child(dataSnapshot.getKey())+".png");
 
                     servicesList.add(service);
                     Log.d("IMAGE", service.getImageUrl());
